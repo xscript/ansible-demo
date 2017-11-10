@@ -6,6 +6,12 @@
       set_fact:
         domain_name: "{{ resource_group | hash('md5') | truncate(16, True, '') + (65535 | random | string) }}"
 
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: westus
+        state: present
+
     - name: Create a DNS zone
       azure_rm_dnszone:
         resource_group: "{{ resource_group }}"
@@ -37,7 +43,7 @@
         state: present
         tags:
           test: new_modified
-        check_mode: yes
+      check_mode: yes
       register: results
 
     - assert:
